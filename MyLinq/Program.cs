@@ -49,7 +49,16 @@ namespace MyLinq
 
 				string city = "London";
 				//var query = db.Customers.Where(c => c.City == city);
-				var query = db.Customers.Where(c => c.City == city).Select(c => new { Name = c.ContactName, Phone = c.Phone });
+				//var query = db.Customers.Where(c => c.City == city).Select(c => new { Name = c.ContactName, Phone = c.Phone });
+				var query = db.Customers.Select(c => new
+				{
+					Name = c.ContactName,
+					Location = new
+					{
+						City = c.City,
+						Country = c.Country
+					}
+				}).Where(x => x.Location.City == city);
 
 				Console.WriteLine("Query:\n{0}\n", query);
 

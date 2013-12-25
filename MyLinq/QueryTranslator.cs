@@ -42,13 +42,13 @@ namespace MyLinq
 				else if (m.Method.Name == "Select")
 				{
 					LambdaExpression lambda = (LambdaExpression)StripQuotes(m.Arguments[1]);
-					ColumnProjection projection = new ColumnProjector().ProjectColumns(lambda.Body, this.row);
+					//ColumnProjection projection = new ColumnProjector().ProjectColumns(lambda.Body, this.row);
 					sb.Append("SELECT ");
 					sb.Append(projection.Columns);
 					sb.Append(" FROM (");
 					this.Visit(m.Arguments[0]);
 					sb.Append(") AS T ");
-					this.projection = projection;
+					//this.projection = projection;
 					return m;
 				}
 			}

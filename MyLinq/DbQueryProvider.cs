@@ -26,37 +26,34 @@ namespace MyLinq
 		public override object Execute(Expression expression)
 		{
 			TranslateResult result = this.Translate(expression);
+			Delegate projector = result.Projector.Compile();
 
 			DbCommand cmd = this.connection.CreateCommand();
 			cmd.CommandText = result.CommandText;
 			DbDataReader reader = cmd.ExecuteReader();
 
 			Type elementType = TypeSystem.GetElementType(expression.Type);
-			if (result.Projector != null)
-			{
-				Delegate projector = result.Projector.Compile();
-				return Activator.CreateInstance(
-					typeof(ProjectionReader<>).MakeGenericType(elementType),
-					BindingFlags.Instance | BindingFlags.NonPublic, null,
-					new object[] { reader, projector },
-					null
-					);
-			}
-			else
-			{
-				return Activator.CreateInstance(
-					typeof(ObjectReader<>).MakeGenericType(elementType),
-					BindingFlags.Instance | BindingFlags.NonPublic, null,
-					new object[] { reader },
-					null
-					);
-			}
+			return Activator.CreateInstance(
+				typeof(ProjectionReader<>).MakeGenericType(elementType),
+				BindingFlags.Instance | BindingFlags.NonPublic, null,
+				new object[] { reader, projector },
+				null
+				);
+		}
+
+		internal class TranslateResult
+		{
+			internal string CommandText;
+			internal LambdaExpression Projector;
 		}
 
 		private TranslateResult Translate(Expression expression)
 		{
 			expression = Evaluator.PartialEval(expression);
-			return new QueryTranslator().Translate(expression);
+			ProjectionExpression proj = (ProjectionExpression)new QueryBinder().Bind(expression);
+			string commandText = new QueryFormatter().Format(proj.Source);
+			LambdaExpression projector = new ProjectionBuilder().Build(proj.Projector);
+			return new TranslateResult { CommandText = commandText, Projector = projector };
 		}
 	}
 }
