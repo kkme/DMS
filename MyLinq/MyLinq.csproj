@@ -41,14 +41,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ColumnProjection.cs" />
+    <Compile Include="ColumnProjector.cs" />
     <Compile Include="DbQueryProvider.cs" />
+    <Compile Include="Evaluator.cs" />
     <Compile Include="ExpressionVisitor.cs" />
     <Compile Include="ObjectReader.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="ProjectionReader.cs" />
+    <Compile Include="ProjectionRow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Query.cs" />
     <Compile Include="QueryProvider.cs" />
     <Compile Include="QueryTranslator.cs" />
+    <Compile Include="TranslateResult.cs" />
     <Compile Include="TypeSystem.cs" />
   </ItemGroup>
   <ItemGroup>

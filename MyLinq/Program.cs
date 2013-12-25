@@ -47,8 +47,8 @@ namespace MyLinq
 				con.Open();
 				Northwind db = new Northwind(con);
 
-				IQueryable<Customers> query =
-					 db.Customers.Where(c => c.City == "London");
+				string city = "London";
+				var query = db.Customers.Where(c => c.City == city);
 
 				Console.WriteLine("Query:\n{0}\n", query);
 
